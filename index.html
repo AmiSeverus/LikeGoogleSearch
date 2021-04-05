@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+            
+            form {
+                display: flex;
+                position:relative;
+                flex-direction: row;
+            }
+            
+            #formText {
+                display: flex; 
+                position: relative; 
+                flex-direction: column;
+                border:1px solid black;
+                border-radius: 5px;
+                padding: 2px 5px;
+            }
+            
+            #input {
+                border: none
+            }
+            
+            #input:focus {
+                border: none;
+                outline: none
+            }
+            
+            hr {
+                width: 100%;
+                margin: 2px 0;
+            }
+            
+            #btn {
+                border: 1px solid black;
+                border-radius: 5px;
+                height: 1.7em;
+                margin-left: 10px;
+            }
+            
+            .res:hover {
+                background-color: lightgrey;
+            }
+            
+            span {
+                background-color: lightsalmon;
+            }
+            
+            #popUp {
+                width: 100%;
+                height: 15px;
+                border: 1px solid green;
+            }
+            
+            body:first-child{
+                
+            }
+            
+        </style>
+    </head>
+    <body>
+        <form id="form" action ='#' method='POST' enctype='multipart/form-data'>
+            <div id="formText">
+                <input autocomplete="off" id="input" type='text' name='text' value='' >
+                <div id='res'></div>
+            </div>
+        </form>    
+    </body>
+    <script>
+        
+        document.getElementById('input').addEventListener('input', textChange);
+        
+        function textChange(e){
+        let inputText = e.target;
+            if (inputText.value){
+                fetch('http://wd7.ru/search.php?text=' + inputText.value).then((response) => {
+                        return response.json();
+                    }).then((json) => {
+                        if (json.length > 0){
+                            let str = '<hr>';
+                            for (let i=0; i < json.length; i++){
+                                str = str + "<div class='res'>"  + json[i]['name'].toLowerCase().replace(inputText.value.toLowerCase(), '<span>' + inputText.value.toLowerCase() + '</span>') + '</div>';
+                            }
+                            document.getElementById('res').innerHTML = str;
+                        } else {
+                            document.getElementById('res').innerHTML = '';
+                        }
+                    });
+            } else {
+                document.getElementById('res').innerHTML = '';
+            }
+        }    
+    </script>
+</html>
